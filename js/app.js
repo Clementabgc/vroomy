@@ -2,7 +2,7 @@
 const $=s=>document.querySelector(s);
 const VAL='https://valhalla1.openstreetmap.de';
 /* Colle ici ta clé gratuite Stadia Maps (https://client.stadiamaps.com) : routage Valhalla fiable, sans le serveur public. */
-const STADIA_KEY='';
+const STADIA_KEY='8d2c9cfb-da7c-440c-b196-6da352614071';
 const FU={ev:'Électrique',essence:'Essence',diesel:'Diesel',hybrid:'Hybride',gpl:'GPL'};
 const CN={all:'Toutes les prises',dom:'Prise domestique',t2:'Type 2',t1:'Type 1',ccs:'Combo CCS',cha:'CHAdeMO'};
 const ICONS=['🚗','🚙','🚕','🚐','🛻','🏎️','🛵','🏍️'];
