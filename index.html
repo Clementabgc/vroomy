@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#17140F">
+<meta name="description" content="Vroomy : itinéraires malins pour voitures sans permis et scooters en France.">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Vroomy"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Vroomy – Ta route, tranquille</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="assets/icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.css">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700&family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head><body>
+<div id="map"></div>
+<div id="brand"><img src="assets/icon.svg" alt="" width="24" height="24">VROOMY</div><div id="toast"></div>
+<button class="fab" id="menu" style="left:14px;top:calc(14px + env(safe-area-inset-top,0px))" aria-label="Menu">⚙</button>
+<button class="fab" id="loc" style="right:14px" aria-label="Ma position">◎</button>
+<div id="speed"><span id="sv">45</span><small>km/h</small></div>
+<div id="lg">🟢 Idéale<br>🟡 Correcte<br>🟠 Déconseillée<br>🔴 Interdite</div>
+<button class="chip" id="clrpoi">✕ Retirer les icônes</button>
+<button class="fab" id="rep" style="right:14px" aria-label="Signaler">⚠️</button>
+<button id="rcn">⌖ Recentrer</button>
+<div id="lim"><span id="lv2">50</span></div><div id="live"><b id="lv">0</b><small>km/h</small></div>
+
+<div id="nbanner"><div id="nic">↑</div><div style="flex:1;min-width:0"><div id="ndist">—</div><div id="ntxt"></div></div></div>
+<div id="nbar"><div><b id="neta">--:--</b><small>arrivée</small></div><div><b id="nrem">—</b><small>restant</small></div><div><b id="nkm">—</b><small>km</small></div><button class="nb" id="nv" aria-label="Voix">🔊</button><button class="nb stop" id="nx" aria-label="Arrêter">✕</button></div>
+<div id="sheet"><div class="grab" aria-label="Agrandir ou réduire le panneau"></div><div id="sscroll"><div id="sbody"></div></div></div>
+
+<div class="ov" id="search">
+ <div class="top"><button class="back" data-close>‹</button><input id="q" placeholder="Où allez-vous ?" autocomplete="off" enterkeyhint="search"></div>
+ <div id="res"></div>
+</div>
+<div class="ov" id="sets"><div class="top"><button class="back" data-close>‹</button><b style="font-size:20px">Réglages</b></div><div id="setl"></div></div>
+<div class="ov" id="acct"><div class="top"><button class="back" data-close>‹</button><b style="font-size:20px">Compte</b></div><div id="acl"></div></div>
+<div class="ov" id="repo"><div class="top"><button class="back" data-close>‹</button><b style="font-size:20px">Signaler</b></div><div id="repg"></div><p style="padding:0 20px 24px;color:var(--mute);font-size:13px;line-height:1.5">Signale uniquement à l'arrêt ou en tant que passager. Les contrôles de police et les radars ne peuvent pas être signalés (interdit en France). Les fausses alertes entraînent la suspension du compte.</p></div>
+<div class="ov" id="trips"><div class="top"><button class="back" data-close>‹</button><b style="font-size:20px">Mes trajets</b></div><div id="trl"></div></div>
+<div class="ov lgl" id="legal" style="z-index:60"><div class="top"><button class="back" data-close>‹</button><b style="font-size:20px">Informations légales</b></div>
+<p style="padding:0 20px;color:var(--warn);font-size:13px;line-height:1.5">⚠️ Modèle de départ : à faire relire par un juriste avant tout lancement public. Remplace les [crochets] par tes informations.</p>
+<details><summary>Mentions légales</summary><p>Éditeur : [nom ou raison sociale], [adresse], [e-mail de contact], [SIRET si professionnel]. Directeur de la publication : [nom]. Hébergeur : [nom, adresse et contact de l'hébergeur].</p></details>
+<details><summary>Conditions d'utilisation</summary><ul><li>L'application est une <b>aide à la navigation</b>. Le conducteur reste seul responsable de sa conduite et doit respecter le code de la route et la signalisation, qui priment toujours sur l'application.</li><li>Les itinéraires, limitations de vitesse, alertes et prix sont <b>indicatifs</b> : ils viennent de données ouvertes (OpenStreetMap, etc.) qui peuvent être inexactes ou incomplètes. Aucune garantie d'exactitude ni de disponibilité.</li><li>Il est interdit de tenir un téléphone en conduisant. Utilise un support fixe et le guidage vocal. Ne manipule pas l'écran en roulant.</li><li>Tu dois détenir le permis ou le titre exigé pour ton véhicule (par exemple BSR / AM pour une voiture sans permis ou un 50 cc, selon ta date de naissance, permis A1 ou B pour un 125 cc). L'application ne vérifie pas ton droit de conduire.</li><li>Contenus des utilisateurs : les signalements doivent être honnêtes, licites et non diffamatoires. Sont interdits : les faux signalements et tout signalement de localisation de contrôles de police ou de radars. Nous pouvons supprimer un contenu ou suspendre un compte. Tout contenu illicite peut être signalé à [e-mail].</li><li>Responsabilité : dans les limites permises par la loi, l'éditeur ne répond pas des dommages liés à l'usage de l'application. Cela ne limite pas les droits que la loi te garantit.</li></ul></details>
+<details><summary>Confidentialité et données personnelles (RGPD)</summary><ul><li><b>Responsable du traitement</b> : [éditeur]. Contact : [e-mail].</li><li><b>Position GPS</b> : utilisée uniquement pour le guidage, avec ton accord (autorisation du navigateur). Elle n'est pas envoyée à nos serveurs. Pour calculer un trajet, les coordonnées de départ et d'arrivée sont transmises aux services de cartographie listés plus bas.</li><li><b>Données sur l'appareil</b> : profils, favoris, historique, trajets et réglages restent dans le stockage de ton navigateur. Tu peux les exporter ou les effacer dans Réglages.</li><li><b>Compte en ligne (optionnel)</b> : e-mail, mot de passe (chiffré), réglages, favoris et signalements sont stockés chez [hébergeur / Supabase]. Finalité : sauvegarde, synchronisation, signalements. Base légale : exécution du service et consentement. Durée : tant que le compte existe, puis suppression sous [30] jours.</li><li><b>Tes droits</b> : accès, rectification, effacement, limitation, opposition, portabilité. Écris à [e-mail]. Tu peux saisir la CNIL (cnil.fr).</li><li><b>Mineurs</b> : en dessous de 15 ans, l'accord d'un parent ou tuteur est nécessaire pour utiliser le service avec des données personnelles.</li><li>Aucune publicité, aucune revente de données.</li></ul></details>
+<details><summary>Services tiers et licences</summary><ul><li>Données cartographiques © contributeurs OpenStreetMap, licence ODbL. Fond de carte : OpenFreeMap.</li><li>Icônes : Fluent Emoji (Microsoft, licence MIT) et Lucide (licence ISC).</li><li>Adresses : Base Adresse Nationale (Licence Ouverte). Recherche de lieux : Photon (Komoot). Lieux autour de toi : Overpass API.</li><li>Itinéraires : Valhalla (FOSSGIS ou Stadia Maps). Trafic et incidents : TomTom (si tu fournis une clé). Météo : Open-Meteo (CC BY 4.0). Prix des carburants : data.economie.gouv.fr (Licence Ouverte).</li><li>Ces services reçoivent des requêtes depuis ton appareil (dont ton adresse IP) et ont leurs propres conditions. Certains peuvent être situés hors de l'Union européenne.</li></ul></details>
+<details><summary>Sécurité routière : rappels</summary><ul><li>Une voiture sans permis est limitée à 45 km/h par construction et n'a pas le droit de circuler sur autoroute ni sur voie rapide. L'application évite ces routes mais ne remplace pas la signalisation.</li><li>Tenir son téléphone en main en conduisant est interdit. Garde les yeux sur la route.</li><li>Par mauvais temps (pluie, brouillard, verglas, vent fort), adapte ta vitesse ou reporte ton trajet.</li></ul></details>
+<p style="padding:14px 20px;color:var(--mute);font-size:12px">Dernière mise à jour : [date]</p></div>
+<div class="ov lgl" id="focus"><div class="top"><button class="back" data-close>‹</button><b style="font-size:20px">Éviter les distractions</b></div>
+<p style="padding:0 20px;color:var(--mute);font-size:14px;line-height:1.5">Un site ou une application comme celle-ci <b>ne peut pas bloquer les notifications des autres applications</b> : seul ton téléphone peut le faire. La bonne solution est le mode « Conduite » ou « Ne pas déranger » : il coupe les réseaux sociaux et laisse passer les appels et messages importants.</p>
+<details open><summary>📱 iPhone</summary><ul><li>Réglages → Concentration → Conduite (ou « + » pour en créer un).</li><li>Personnes : autorise tes favoris ou tes parents pour les appels et messages.</li><li>Apps : autorise seulement Téléphone et Messages (pas Instagram, TikTok, Snapchat…).</li><li>Active-le automatiquement : « Activer automatiquement » → Quand je conduis (ou avec Bluetooth du véhicule).</li></ul></details>
+<details open><summary>🤖 Android</summary><ul><li>Réglages → Notifications → Ne pas déranger (ou « Modes et routines » → Conduite sur Samsung).</li><li>Exceptions : autorise les appels et messages de tes contacts favoris.</li><li>Applis : laisse seulement Téléphone et Messages, bloque les réseaux sociaux.</li><li>Programme-le ou active-le à la main avant de rouler.</li></ul></details>
+<details><summary>Conseils</summary><ul><li>Active-le AVANT de démarrer, pas en roulant.</li><li>Prévois un favori ou deux (un parent) : leurs appels passent toujours.</li><li>Garde le téléphone sur un support fixe, écran de guidage en vue.</li></ul></details></div>
+<div class="ov" id="fcm" style="z-index:45;background:#000a"><div style="margin:20vh auto 0;background:var(--card);border-radius:24px;padding:22px;max-width:420px;width:calc(100% - 32px)"><div style="font-size:36px">📵</div><h3 style="margin:6px 0">Mode Conduite</h3><p style="color:var(--mute);font-size:14px;line-height:1.5">Pense à activer le mode Conduite ou Ne pas déranger de ton téléphone pour couper les notifications des réseaux sociaux.</p>
+<button class="big" id="fc2">C'est fait, c'est parti</button><button class="ghost" id="fc1">Voir comment faire</button><button class="ghost" id="fc3">Ne plus me le rappeler</button></div></div>
+<div class="ov" id="vehs"><div class="top"><button class="back" data-close>‹</button><b style="font-size:20px">Votre véhicule</b></div><div id="vlist"></div></div>
+<div class="ov" id="about"><div class="top"><button class="back" data-close>‹</button><b style="font-size:20px">À propos</b></div>
+ <div style="padding:0 20px 30px;line-height:1.5;color:var(--mute)">
+ <p><b style="color:var(--ink)">Vroomy</b> propose des itinéraires qui évitent autoroutes et voies rapides pour les voitures sans permis et les scooters.</p>
+ <p>L'itinéraire est une aide, pas une garantie : respecte toujours la signalisation et le code de la route.</p>
+ <p>Cartes © OpenStreetMap contributors · OpenFreeMap. Adresses : Base Adresse Nationale. Calcul : Valhalla (FOSSGIS).</p>
+ <button class="chip" id="clr">Effacer mes données</button></div></div>
+<div class="ov on" id="intro" style="display:none;z-index:50;background:var(--bg)"><div class="in-wrap">
+<div class="in-top"><img src="assets/icon.svg" alt=""><span class="in-tag">VSP · 50 cc · 125 cc</span></div>
+<h1 class="in-title">VROOMY</h1>
+<p class="in-lead">Des itinéraires calmes pour ceux qui roulent lentement.</p>
+<ol class="in-rules">
+<li><b>01</b><span>Respecte le code de la route. L'itinéraire est une aide, pas une garantie.</span></li>
+<li><b>02</b><span>Jamais le téléphone en main en conduisant. Support fixe, voix activée.</span></li>
+<li><b>03</b><span>Ta position sert au guidage et n'est pas envoyée à nos serveurs.</span></li></ol>
+<label class="in-ok"><input type="checkbox" id="cg"><span>J'ai lu et j'accepte les <a href="#" id="l1">conditions d'utilisation</a> et la <a href="#" id="l2">politique de confidentialité</a>. J'ai 15 ans ou plus, ou l'accord d'un parent.</span></label>
+<button class="big" id="ok" disabled>Continuer</button></div></div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.js"></script>
+<script src="js/icons.js"></script>
+<script src="js/app.js"></script>
+</body></html>

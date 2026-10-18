@@ -1,0 +1,27 @@
+VROOMY - site web
+=================
+
+POUR LE METTRE EN LIGNE (5 minutes, gratuit)
+1. Va sur https://app.netlify.com/drop
+2. Glisse le DOSSIER "vroomy" (ou le fichier .zip) sur la page.
+3. Netlify te donne un lien https:// : ouvre-le sur ton téléphone.
+
+IMPORTANT : ouvre toujours le site avec le lien https://, jamais en double-cliquant sur index.html (le GPS ne marche pas en local).
+
+CLÉS (facultatif) : dans le site, menu Réglages (engrenage) -> "Trafic et services" :
+- Clé Stadia : calcul d'itinéraires fiable (https://client.stadiamaps.com)
+- Clé TomTom : trafic et incidents (https://developer.tomtom.com)
+
+PERSONNALISER (logo, nom, couleurs) : voir GUIDE-PERSONNALISATION.txt
+
+CONTENU
+- index.html : la page
+- css/style.css : tout le design
+- js/app.js : le fonctionnement (cartes, GPS, itinéraires...)
+- js/icons.js : les icônes (Fluent Emoji - MIT, Lucide - ISC)
+- assets/ : logo et icônes de l'app
+- manifest.webmanifest + sw.js : permettent d'ajouter Vroomy à l'écran d'accueil
+
+AJOUTER A L'ECRAN D'ACCUEIL : iPhone -> Safari -> Partager -> "Sur l'écran d'accueil". Android -> Chrome -> menu ⋮ -> "Installer l'application".
+
+AVANT UN LANCEMENT PUBLIC : fais relire les textes juridiques (Réglages -> Informations légales) par un juriste et remplace les [crochets].

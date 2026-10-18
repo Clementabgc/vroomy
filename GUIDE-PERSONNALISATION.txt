@@ -1,0 +1,37 @@
+VROOMY - COMMENT PERSONNALISER (logo, nom, couleurs)
+====================================================
+Outil conseillé (gratuit) : Visual Studio Code (code.visualstudio.com) ou Notepad++.
+Ouvre le dossier "vroomy" dans l'éditeur. Pour tout remplacer d'un coup : Ctrl+Maj+H (Rechercher / Remplacer dans tous les fichiers).
+
+1) CHANGER LE NOM DE L'APPLICATION
+   Remplace "Vroomy" (et "VROOMY") par ton nouveau nom, dans ces fichiers :
+   - index.html : titre de l'onglet, texte du bandeau en haut, écran de bienvenue, titre de l'app iPhone
+   - manifest.webmanifest : "name" et "short_name" (le nom sous l'icône sur l'écran d'accueil)
+   - js/app.js : textes "À propos", mentions légales, nom du fichier d'export
+   Astuce : fais d'abord "Vroomy" -> "TonNom", puis "VROOMY" -> "TONNOM".
+
+2) CHANGER LE LOGO
+   Le logo est le fichier assets/icon.svg. Garde exactement ce nom de fichier.
+   a) Crée ton logo en carré (512 x 512 px), par exemple sur canva.com, puis télécharge-le en SVG ou PNG.
+   b) Remplace assets/icon.svg par ton logo. (Si tu n'as qu'un PNG, ouvre index.html et change "assets/icon.svg" en "assets/icon.png" aux endroits indiqués.)
+   c) Crée 3 images PNG carrées avec ton logo, avec ces noms exacts, dans assets/ :
+        icon-192.png  (192 x 192)
+        icon-512.png  (512 x 512)
+        apple-touch-icon.png  (180 x 180)
+      Le plus simple : realfavicongenerator.net ou cloudconvert.com pour redimensionner.
+   d) Laisse environ 10 % de marge autour du dessin pour que l'icône ne soit pas coupée sur Android.
+
+3) CHANGER LES COULEURS ET LES POLICES
+   Ouvre css/style.css. Tout en haut, modifie les variables :
+     --bg / --card : fond de l'écran et des panneaux (papier chaud)
+     --ink         : couleur du texte et des contours
+     --acc         : le jaune des boutons et du logo
+     --sign        : le vert du bandeau de guidage
+     --route       : le vert du trajet sur la carte (la couleur du trajet sur la carte se règle aussi dans js/app.js : cherche 0A8F68)
+   Polices : Barlow Condensed (titres, chiffres) et Barlow (textes), chargées dans index.html.
+   Pense aussi à "theme_color" et "background_color" dans manifest.webmanifest.
+
+4) APRÈS TOUTE MODIFICATION
+   - Dans sw.js, change "vroomy-v8" en "vroomy-v9" (puis v10...) : ça force les téléphones à recharger la nouvelle version.
+   - Remets le dossier en ligne (Netlify Drop : glisse à nouveau le dossier).
+   - Sur téléphone, si tu vois l'ancienne version : ferme complètement l'app/l'onglet et rouvre-la. Si tu avais ajouté l'app à l'écran d'accueil, supprime-la et ajoute-la à nouveau pour voir la nouvelle icône.
