@@ -1,7 +1,19 @@
 /* VROOMY — direction artistique
    Idée : la signalisation routière française et la carte papier.
    Papier chaud + encre, jaune "ligne de chaussée" réservé aux actions,
-   vert "panneau de direction" pour le guidage, rouge uniquement pour le danger. */
+   vert "panneau de direction" pour le guidage, rouge uniquement pour le danger. 
+   
+   CHANGER LES COULEURS ET LES POLICES
+   Ouvre css/style.css. Tout en haut, modifie les variables :
+     --bg / --card : fond de l'écran et des panneaux (papier chaud)
+     --ink         : couleur du texte et des contours
+     --acc         : le jaune des boutons et du logo
+     --sign        : le vert du bandeau de guidage
+     --route       : le vert du trajet sur la carte (la couleur du trajet sur la carte se règle aussi dans js/app.js : cherche 0A8F68)
+   Polices : Barlow Condensed (titres, chiffres) et Barlow (textes), chargées dans index.html.
+   Pense aussi à "theme_color" et "background_color" dans manifest.webmanifest.*/
+
+
 :root{--bg:#F3EEE2;--card:#FBF8F0;--ink:#17140F;--mute:#6B6458;--chip:#E8E1D0;--line:#D9D1BD;--edge:#17140F;
 --blue:#0A6B50;--acc:#FFCF1F;--ok:#0A7A4E;--warn:#B25A00;--sign:#0B5D45;--route:#0A8F68;--danger:#D92D20;
 --fd:'Barlow Condensed','Arial Narrow',sans-serif;--fb:'Barlow',system-ui,-apple-system,sans-serif;
