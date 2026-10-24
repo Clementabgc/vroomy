@@ -3,7 +3,7 @@
    Papier chaud + encre, jaune "ligne de chaussée" réservé aux actions,
    vert "panneau de direction" pour le guidage, rouge uniquement pour le danger. */
 :root{--bg:#F3EEE2;--card:#FBF8F0;--ink:#17140F;--mute:#6B6458;--chip:#E8E1D0;--line:#D9D1BD;--edge:#17140F;
---blue:#0A6B50;--acc:#FFCF1F;--ok:#0A7A4E;--warn:#B25A00;--sign:#0B5D45;--route:#0A8F68;--danger:#D92D20;
+--blue:#0A6B50;--acc:#006aff;--ok:#0A7A4E;--warn:#B25A00;--sign:#0B5D45;--route:#0A8F68;--danger:#D92D20;
 --fd:'Barlow Condensed','Arial Narrow',sans-serif;--fb:'Barlow',system-ui,-apple-system,sans-serif;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14110D;--card:#1E1A14;--ink:#F3EEE2;--mute:#A39B8A;--chip:#2B261D;--line:#3A3326;--edge:#5B5242;--blue:#37D39B;--ok:#37D39B;--warn:#FFB347;--route:#2ED08B}}
