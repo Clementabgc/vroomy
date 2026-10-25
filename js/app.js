@@ -12,7 +12,7 @@ const G={get(k,d){try{const v=localStorage.getItem('g:'+k);return v?JSON.parse(v
 const CUR=G.get('cur','guest'),PF=CUR==='guest'?'':CUR+':';
 const store={get(k,d){try{const v=localStorage.getItem(PF+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(PF+k,JSON.stringify(v))}catch(e){}if(typeof syncSoon==='function')syncSoon()}};
 const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const DEF={voice:true,vol:1,alert:true,tol:3,notoll:true,noferry:true,notrack:true,alts:true,theme:'auto',showrep:true,repbtn:true,flow:true,avoid:true,incmap:true,focusrem:true,duck:true,vmax:0,cons:0,vcol:'#FFCF1F',beg:false,vsp:false,fuel:'essence',conn:'all',vicon:'',vname:'',cursor:'auto',style:'liberty',tilt:true,head:true,traffic:true,tomtom:'',stadia:''};
+const DEF={voice:true,vol:1,alert:true,tol:3,notoll:true,noferry:true,notrack:true,alts:true,theme:'auto',showrep:true,repbtn:true,flow:true,avoid:true,incmap:true,focusrem:true,duck:true,vmax:0,cons:0,vcol:'#4B2BEA',beg:false,vsp:false,fuel:'essence',conn:'all',vicon:'',vname:'',cursor:'auto',style:'positron',tilt:true,head:true,traffic:true,tomtom:'',stadia:''};
 const S=Object.assign({},DEF,store.get('set',{}));
 function applyTheme(){if(S.theme==='auto')document.documentElement.removeAttribute('data-theme');else document.documentElement.dataset.theme=S.theme}
 applyTheme();
@@ -29,9 +29,9 @@ const SV={
  sport:'<path d="M20 2C28 2 33 12 33 24L34 44C34 56 29 62 20 62C11 62 6 56 6 44L7 24C7 12 12 2 20 2Z" fill="@@" stroke="#fff" stroke-width="3"/><rect x="10" y="22" width="20" height="10" rx="5" fill="#1b2340" opacity=".85"/><rect x="18" y="4" width="4" height="56" fill="#fff" opacity=".55"/><circle cx="13" cy="9" r="1.8" fill="#ffe88a"/><circle cx="27" cy="9" r="1.8" fill="#ffe88a"/>',
  sco:'<rect x="7" y="3" width="10" height="58" rx="5" fill="@@" stroke="#fff" stroke-width="2.5"/><rect x="3" y="6" width="18" height="13" rx="6" fill="@@" stroke="#fff" stroke-width="2"/><rect x="1" y="14" width="22" height="5" rx="2.5" fill="#1b2340"/><rect x="8" y="30" width="8" height="14" rx="4" fill="#1b2340"/>',
  moto:'<rect x="9" y="3" width="6" height="58" rx="3" fill="#1b2340"/><rect x="5" y="22" width="14" height="22" rx="7" fill="@@" stroke="#fff" stroke-width="2.5"/><rect x="0" y="11" width="24" height="3.5" rx="1.7" fill="#1b2340"/><circle cx="12" cy="36" r="4" fill="#fff" opacity=".8"/>'};
-function vsvg(k,col,h){const w=(k==='sco'||k==='moto')?24:40;return '<svg viewBox="0 0 '+w+' 64" width="'+Math.round(h*w/64)+'" height="'+h+'" style="filter:drop-shadow(0 3px 3px #0006)">'+(SV[k]||SV.sedan).split('@@').join(col)+'</svg>'}
+function vsvg(k,col,h){const w=(k==='sco'||k==='moto')?24:40;return '<svg viewBox="0 0 '+w+' 64" width="'+Math.round(h*w/64)+'" height="'+h+'" style="filter:drop-shadow(0 0 7px '+col+') drop-shadow(0 3px 4px #0005)">'+(SV[k]||SV.sedan).split('@@').join(col)+'</svg>'}
 const vIc=()=>S.vicon||VEH[vi].e,vNm=()=>(S.vname||'').trim()||VEH[vi].n;
-function curEl(){const d=document.createElement('div'),c=S.cursor,col=S.vcol||'#FFCF1F';
+function curEl(){const d=document.createElement('div'),c=S.cursor,col=S.vcol||'#4B2BEA';
  if(c==='dot'){d.className='me';return d}
  if(c==='arrow'){d.innerHTML='<svg width="46" height="46" viewBox="0 0 44 44"><path d="M22 3 37 39 22 31 7 39Z" fill="'+col+'" stroke="#fff" stroke-width="3" stroke-linejoin="round"/></svg>';return d}
  d.innerHTML=vsvg(VK[vIc()]||'sedan',col,58);return d}
@@ -48,10 +48,11 @@ map.addControl(new maplibregl.AttributionControl({compact:true,customAttribution
 const VSPL=[['vsp-r','#e5484d',['motorway','trunk']],['vsp-o','#ff9f0a',['primary']],['vsp-y','#ffd60a',['secondary','tertiary']],['vsp-g','#30d158',['minor','service']]];
 function vspOn(){try{VSPL.forEach(x=>{if(map.getLayer(x[0]))map.removeLayer(x[0])});if(!S.vsp)return;
  VSPL.forEach(([id,col,cl])=>map.addLayer({id,type:'line',source:'openmaptiles','source-layer':'transportation',minzoom:8,filter:['in',['get','class'],['literal',cl]],layout:{'line-cap':'round','line-join':'round'},paint:{'line-color':col,'line-width':['interpolate',['linear'],['zoom'],8,.8,13,2.5,17,6],'line-opacity':.85}},map.getLayer('rc')?'rc':undefined))}catch(e){}}
-const applyUi=()=>{$('#rep').style.display=S.repbtn?'':'none'};const legend=()=>{$('#lg').style.display=S.vsp?'block':'none'};
+const avInit=()=>{const n=(curProf().name||'').replace(/[^A-Za-zÀ-ÿ0-9]/g,'');return CUR==='guest'||!n?'V':n.slice(0,2).toUpperCase()};const applyUi=()=>{$('#rep').style.display=S.repbtn?'':'none';$('#avl').textContent=avInit()};const legend=()=>{$('#lg').style.display=S.vsp?'block':'none'};
 function addRoute(){try{vspOn()}catch(e){}try{trafficOn()}catch(e){}try{incLinesApply()}catch(e){}if(map.getSource('r'))return;map.addSource('r',{type:'geojson',data:{type:'FeatureCollection',features:[]}});
- map.addLayer({id:'rc',type:'line',source:'r',layout:{'line-cap':'round','line-join':'round'},paint:{'line-color':'#17140F','line-width':12}});
- map.addLayer({id:'rl',type:'line',source:'r',layout:{'line-cap':'round','line-join':'round'},paint:{'line-color':'#0A8F68','line-width':7}});if(R&&R.c&&R.c.length&&typeof dest!=='undefined'&&dest)drawRoute(R.c)}
+ map.addLayer({id:'rg',type:'line',source:'r',layout:{'line-cap':'round','line-join':'round'},paint:{'line-color':'#7A3BF2','line-width':24,'line-blur':10,'line-opacity':.5}});
+ map.addLayer({id:'rc',type:'line',source:'r',layout:{'line-cap':'round','line-join':'round'},paint:{'line-color':'#fff','line-width':11}});
+ map.addLayer({id:'rl',type:'line',source:'r',layout:{'line-cap':'round','line-join':'round'},paint:{'line-color':'#4B2BEA','line-width':6}});if(R&&R.c&&R.c.length&&typeof dest!=='undefined'&&dest)drawRoute(R.c)}
 map.on('style.load',addRoute);
 let errT=0,ttOff=false,errW=0,errN=0;
 map.on('error',e=>{const er=(e&&e.error)||{},id=e&&e.sourceId,st=er.status,msg=String(er.message||'').slice(0,70);
@@ -90,8 +91,9 @@ new ResizeObserver(layout).observe($('#sheet'));
 function home(){setSheet('full');
  const v=VEH[vi];$('#sv').textContent=v.v;
  const H=store.get('home',null),W=store.get('work',null);
- $('#sbody').innerHTML=`<button class="search" id="go"><span>🔍</span>Où allez-vous ?</button>
- <div class="chips"><button class="chip" id="h">🏠 Domicile</button><button class="chip" id="w">💼 Travail</button><button class="chip" id="tp">📊 Trajets</button></div>
+ $('#sbody').innerHTML=`<button class="search" id="go"><span>{i:map-pin}</span>Où allez-vous ?</button>
+ <div class="chips">${[['fuel','fy','{i:fuel}','Stations'],['park','bl','P','Parkings'],['ev','gr','{i:zap}','Bornes'],['shop','or','{i:shopping-cart}','Courses']].map(c=>`<button class="chip" data-hc="${c[0]}"><span class="cc ${c[1]}">${c[2]}</span>${c[3]}</button>`).join('')}</div>
+ <div class="chips"><button class="chip s" id="h">{i:house} Domicile</button><button class="chip s" id="w">{i:briefcase} Travail</button><button class="chip s" id="tp">{i:chart-no-axes-column} Trajets</button></div>
  <button class="veh" id="vb"><span class="em">${vIc()}</span><div style="flex:1"><b>${esc(vNm())}</b><span>${v.d} · ${FU[S.fuel]}</span></div><span>›</span></button>`;
  $('#go').onclick=()=>openSearch();
  $('#h').onclick=()=>H?plan(H):openSearch('home');
@@ -101,11 +103,11 @@ function home(){setSheet('full');
 function drawV(){
  const ev=S.fuel==='ev'||S.fuel==='hybrid';
  $('#vlist').innerHTML='<div class="sec">Type de véhicule</div>'+VEH.map((v,i)=>`<button class="opt ${i===vi?'sel':''}" data-vt="${i}"><span class="em">${v.e}</span><div><b>${v.n}</b><br><span style="color:var(--mute);font-size:14px">${v.d}</span></div></button>`).join('')+
- `<div class="sec">Icône sur la carte</div><div style="display:flex;flex-wrap:wrap;gap:10px;padding:12px 20px;background:var(--card)">${ICONS.map(x=>`<button class="chip" style="flex-direction:column;gap:4px;padding:8px 10px;${vIc()===x?'border-color:var(--blue);border-width:2.5px':''}" data-ic="${x}">${vsvg(VK[x],S.vcol||'#FFCF1F',46)}<small>${VN[VK[x]]}</small></button>`).join('')}</div>
+ `<div class="sec">Icône sur la carte</div><div style="display:flex;flex-wrap:wrap;gap:10px;padding:12px 20px;background:var(--card)">${ICONS.map(x=>`<button class="chip" style="flex-direction:column;gap:4px;padding:8px 10px;${vIc()===x?'border-color:var(--blue);border-width:2.5px':''}" data-ic="${x}">${vsvg(VK[x],S.vcol||'#4B2BEA',46)}<small>${VN[VK[x]]}</small></button>`).join('')}</div>
  <div class="set"><span>Nom / modèle</span><input type="text" id="vn" value="${esc(S.vname)}" placeholder="ex. Aixam City"></div>
  <div class="set"><span>Vitesse max (facultatif)</span><input type="text" inputmode="numeric" id="vm" value="${S.vmax||''}" placeholder="${VEH[vi].base} km/h"></div>
  <div class="set"><span>Conso (${S.fuel==='ev'?'kWh':'L'}/100 km)</span><input type="text" inputmode="decimal" id="vc" value="${S.cons||''}" placeholder="ex. 4"></div>
- <div class="sec">Couleur sur la carte</div><div style="display:flex;gap:12px;padding:12px 20px;background:var(--card)">${['#FFCF1F','#e5484d','#1a9d5c','#ff7a59','#2B6FF3','#17140F'].map(x=>`<button data-col="${x}" style="width:38px;height:38px;border-radius:50%;border:3px solid ${S.vcol===x?'var(--ink)':'transparent'};background:${x}"></button>`).join('')}</div>
+ <div class="sec">Couleur sur la carte</div><div style="display:flex;gap:12px;padding:12px 20px;background:var(--card)">${['#4B2BEA','#e5484d','#1a9d5c','#ff7a59','#2B6FF3','#17140F'].map(x=>`<button data-col="${x}" style="width:38px;height:38px;border-radius:50%;border:3px solid ${S.vcol===x?'var(--ink)':'transparent'};background:${x}"></button>`).join('')}</div>
  <div class="sec">Motorisation</div>`+Object.keys(FU).map(k=>`<button class="opt ${S.fuel===k?'sel':''}" data-fu="${k}"><span class="em">${{ev:'🔌',essence:'⛽',diesel:'🛢️',hybrid:'♻️',gpl:'🟢'}[k]}</span><b>${FU[k]}</b></button>`).join('')+
  (ev?'<div class="sec">Prise de recharge de mon véhicule</div>'+Object.keys(CN).map(k=>`<button class="opt ${S.conn===k?'sel':''}" data-cn="${k}"><b>${CN[k]}</b></button>`).join(''):'')+
  '<div style="padding:20px"><button class="big" data-ok="1">Terminer</button></div>'}
@@ -570,8 +572,8 @@ function trafficOn(){ttErr=0;ttWarn=false;try{if(map.getLayer('tt-flow'))map.rem
 let incFC={type:'FeatureCollection',features:[]};
 function incLinesApply(){try{if(!map.getSource('ttl')){map.addSource('ttl',{type:'geojson',data:incFC});
   const add=(id,paint)=>map.addLayer({id,type:'line',source:'ttl',layout:{'line-cap':'round','line-join':'round'},paint},map.getLayer('rc')?'rc':undefined);
-  add('ttl-c',{'line-color':'#fff','line-width':['interpolate',['linear'],['zoom'],8,3,14,8,18,14],'line-opacity':.05});
-  add('ttl-l',{'line-color':['match',['get','c'],'r','#E5282D','#FFC400'],'line-width':['interpolate',['linear'],['zoom'],8,1.8,14,5,18,9],'line-opacity':.05})}
+  add('ttl-c',{'line-color':'#fff','line-width':['interpolate',['linear'],['zoom'],8,3,14,8,18,14],'line-opacity':.9});
+  add('ttl-l',{'line-color':['match',['get','c'],'r','#E5282D','#FFC400'],'line-width':['interpolate',['linear'],['zoom'],8,1.8,14,5,18,9]})}
  else map.getSource('ttl').setData(incFC)}catch(e){}}
 async function ttInc(b){const K=TT();const f='{incidents{geometry{type,coordinates},properties{iconCategory,magnitudeOfDelay,events{description},from,to,roadNumbers,delay}}}';
  const r=await fetch('https://api.tomtom.com/traffic/services/5/incidentDetails?key='+encodeURIComponent(K)+'&bbox='+b.join(',')+'&fields='+encodeURIComponent(f)+'&language=fr-FR&timeValidityFilter=present');
@@ -628,20 +630,22 @@ function exportData(){const o={profil:curProf().name,exporte:new Date().toISOStr
  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(o,null,2)],{type:'application/json'}));a.download='mes-donnees-vroomy.json';a.click()}
 
 /* ---- Menu & démarrage ---- */
-const SCH=[['Conduite'],['sw','beg','Mode débutant (plus d’alertes, trajets simples)'],['Concentration'],['sw','focusrem','Rappel « mode Conduite » au départ'],['btn','fc_','📵 Comment bloquer les notifications'],['Guidage'],['sw','voice','Guidage vocal'],['sw','duck','Ne pas couper ma musique (expérimental)'],['rng','vol','Volume de la voix'],['sw','alert','Alerte de dépassement de vitesse'],['sel','tol','Tolérance avant alerte',[[0,'0 km/h'],[3,'3 km/h'],[5,'5 km/h'],[10,'10 km/h']]],
+const SCH=[['Conduite'],['sw','beg','Mode débutant (plus d’alertes, trajets simples)'],['Concentration'],['sw','focusrem','Rappel « mode Conduite » au départ'],['btn','fc_','{i:bell-off} Comment bloquer les notifications'],['Guidage'],['sw','voice','Guidage vocal'],['sw','duck','Ne pas couper ma musique (expérimental)'],['rng','vol','Volume de la voix'],['sw','alert','Alerte de dépassement de vitesse'],['sel','tol','Tolérance avant alerte',[[0,'0 km/h'],[3,'3 km/h'],[5,'5 km/h'],[10,'10 km/h']]],
 ['Itinéraire'],['sw','notoll','Éviter les péages'],['sw','noferry','Éviter les bacs'],['sw','notrack','Éviter pistes et chemins'],['sw','alts','Proposer des trajets alternatifs'],['sw','avoid','Éviter routes barrées et travaux graves (TomTom)'],['info','Autoroutes et voies rapides : toujours évitées (sécurité)'],
 ['Carte'],['sel','style','Style de carte',[['positron','Clair épuré'],['liberty','En couleurs'],['bright','Couleurs vives']]],['sel','cursor','Icône de mon véhicule sur la carte',[['auto','Selon mon icône'],['arrow','➤ Flèche'],['dot','● Point']]],['sel','theme','Apparence',[['auto','Automatique'],['light','Clair'],['dark','Sombre']]],['sw','tilt','Vue 3D en navigation'],['sw','head','Carte orientée dans le sens de la route'],['sw','vsp','Couleur des routes pour VSP (🟢🟡🟠🔴)'],['sw','showrep','Afficher les signalements sur la carte'],['sw','repbtn','Afficher le bouton ⚠️ Signaler'],
-['Trafic et services'],['sw','traffic','Tenir compte du trafic'],['sw','flow','Routes barrées et bouchons en couleur (rouge / jaune)'],['sw','incmap','Accidents et travaux sur la carte'],['txt','tomtom','Clé TomTom (trafic)'],['btn','tt_','🔍 Tester ma clé TomTom'],['txt','stadia','Clé Stadia (itinéraires)']];
+['Trafic et services'],['sw','traffic','Tenir compte du trafic'],['sw','flow','Routes barrées et bouchons en couleur (rouge / jaune)'],['sw','incmap','Accidents et travaux sur la carte'],['txt','tomtom','Clé TomTom (trafic)'],['btn','tt_','{i:key-round} Tester ma clé TomTom'],['txt','stadia','Clé Stadia (itinéraires)']];
+$('#sbody').addEventListener('click',e=>{const b=e.target.closest('[data-hc]');if(!b)return;openSearch();setTimeout(()=>$('#q').blur(),120);nearby(b.dataset.hc)});
+const KI={voice:'volume-2',vol:'sliders-horizontal',duck:'headphones',alert:'gauge',tol:'timer',notoll:'badge-euro',noferry:'ship',notrack:'route',alts:'split',avoid:'construction',beg:'sprout',theme:'palette',tilt:'rotate-3d',head:'compass',vsp:'map',showrep:'message-square-warning',repbtn:'siren',style:'map',cursor:'navigation',traffic:'activity',flow:'traffic-cone',incmap:'triangle-alert',tomtom:'key-round',stadia:'key-round',focusrem:'bell-off'};
 function drawSets(){const v=VEH[vi];
- $('#setl').innerHTML=`<div class="sec">Compte</div><button class="set" id="ac_"><span>👤 ${esc(curProf().name)}</span><span>›</span></button><div class="sec">Mon véhicule</div><button class="set" id="sv_"><span>${vIc()} ${esc(vNm())} · ${FU[S.fuel]}</span><span>›</span></button>`+SCH.map(r=>{
+ $('#setl').innerHTML=`<button class="pcard" id="ac_"><span class="pav">${avInit()}</span><span class="pt"><b>${esc(curProf().name)}</b><small>${curProf().uid?'Compte en ligne':'Profil sur cet appareil'}</small></span><span style="color:#A3A7BA">›</span></button><div class="sec">Mon véhicule</div><button class="set" id="sv_"><span>${vIc()} ${esc(vNm())} · ${FU[S.fuel]}</span><span>›</span></button>`+SCH.map(r=>{
   if(r.length===1)return `<div class="sec">${r[0]}</div>`;
   if(r[0]==='btn')return `<button class="set" id="${r[1]}"><span>${r[2]}</span><span>›</span></button>`;
-  if(r[0]==='info')return `<div class="set" style="color:var(--mute);font-size:14px">🔒 ${r[1]}</div>`;
+  if(r[0]==='info')return `<div class="set" style="color:var(--mute);font-size:14px">{i:lock} ${r[1]}</div>`;
   const [t,k,l,o]=r,c=S[k];
   const inp=t==='sw'?`<input type="checkbox" data-k="${k}" ${c?'checked':''}>`:t==='rng'?`<input type="range" data-k="${k}" min="0" max="1" step="0.1" value="${c}">`:
    t==='sel'?`<select data-k="${k}">${o.map(x=>`<option value="${x[0]}" ${String(x[0])===String(c)?'selected':''}>${x[1]}</option>`).join('')}</select>`:`<input type="text" data-k="${k}" value="${esc(c)}" placeholder="optionnel" autocomplete="off" autocapitalize="off" spellcheck="false">`;
-  return `<label class="set"><span>${l}</span>${inp}</label>`}).join('')+
-  `<div class="sec">Mes données</div><button class="set" id="tr_"><span>📊 Mes trajets</span><span>›</span></button><button class="set" id="ex_"><span>⬇️ Exporter mes données</span><span>›</span></button><div class="sec">Application</div><button class="set" id="lg_"><span>⚖️ Informations légales</span><span>›</span></button><button class="set" id="ab_"><span>À propos et sécurité</span><span>›</span></button><button class="set" id="rs_" style="color:#e5484d"><span>Réinitialiser les réglages</span></button>`;
+  return `<label class="set"><span>${KI[k]?'{i:'+KI[k]+'}':''}${l}</span>${inp}</label>`}).join('')+
+  `<div class="sec">Mes données</div><button class="set" id="tr_"><span>{i:chart-no-axes-column} Mes trajets</span><span>›</span></button><button class="set" id="ex_"><span>{i:download} Exporter mes données</span><span>›</span></button><div class="sec">Application</div><button class="set" id="lg_"><span>{i:scale} Informations légales</span><span>›</span></button><button class="set" id="ab_"><span>{i:info} À propos et sécurité</span><span>›</span></button><button class="set" id="rs_" style="color:#e5484d"><span>{i:rotate-ccw} Réinitialiser les réglages</span></button>`;
  $('#ac_').onclick=()=>{drawAcct();$('#acct').classList.add('on')};$('#sv_').onclick=()=>{drawV();$('#vehs').classList.add('on')};$('#ab_').onclick=()=>$('#about').classList.add('on');$('#fc_').onclick=()=>$('#focus').classList.add('on');$('#tt_').onclick=testTT;$('#tr_').onclick=()=>{drawTrips();$('#trips').classList.add('on')};$('#lg_').onclick=()=>$('#legal').classList.add('on');$('#ex_').onclick=exportData;
  $('#rs_').onclick=()=>{if(confirm('Remettre tous les réglages par défaut ?')){Object.assign(S,DEF);store.set('set',S);applyTheme();drawSets();$('#nv').textContent='🔊'}}}
 $('#setl').addEventListener('change',e=>{const k=e.target.dataset.k;if(!k)return;const el=e.target;S[k]=el.type==='checkbox'?el.checked:el.type==='range'?+el.value:k==='tol'?+el.value:el.value.trim();store.set('set',S);applyTheme();if(k==='style')map.setStyle('https://tiles.openfreemap.org/styles/'+S.style);if(k==='cursor')refreshMe();if(k==='vsp'){vspOn();legend()}if(k==='showrep'){lastRep=0;showReps()}if(k==='flow')trafficOn();if(k==='incmap'){lastInc=0;loadMapInc()}if(k==='repbtn')applyUi();if(k==='voice')$('#nv').textContent=S.voice?'🔊':'🔇';if(k==='tomtom'||k==='traffic'){tfOK=null;Object.keys(tfCache).forEach(x=>delete tfCache[x]);ttOff=false;trafficOn();lastInc=0;loadMapInc();if(dest)plan(dest)}});
