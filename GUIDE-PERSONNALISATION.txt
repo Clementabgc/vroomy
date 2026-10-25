@@ -21,17 +21,19 @@ Ouvre le dossier "vroomy" dans l'éditeur. Pour tout remplacer d'un coup : Ctrl+
       Le plus simple : realfavicongenerator.net ou cloudconvert.com pour redimensionner.
    d) Laisse environ 10 % de marge autour du dessin pour que l'icône ne soit pas coupée sur Android.
 
-3) CHANGER LES COULEURS ET LES POLICES
+3) CHANGER LES COULEURS ET LA POLICE
    Ouvre css/style.css. Tout en haut, modifie les variables :
-     --bg / --card : fond de l'écran et des panneaux (papier chaud)
-     --ink         : couleur du texte et des contours
-     --acc         : le jaune des boutons et du logo
-     --sign        : le vert du bandeau de guidage
-     --route       : le vert du trajet sur la carte (la couleur du trajet sur la carte se règle aussi dans js/app.js : cherche 0A8F68)
-   Polices : Barlow Condensed (titres, chiffres) et Barlow (textes), chargées dans index.html.
+     --g1 et --g2  : les deux couleurs du dégradé indigo -> violet (boutons, avatar, bandeau de guidage)
+     --grad / --grad2 : le dégradé lui-même (reprend --g1 et --g2, à mettre à jour avec les mêmes codes)
+     --bg / --card : fond de l'écran et des cartes blanches
+     --ink         : couleur du texte
+     --blue        : le violet des icônes dans les réglages
+     --glow        : l'intensité du halo lumineux autour des boutons
+   Couleur du trajet sur la carte : dans js/app.js, cherche 4B2BEA (trajet) et 7A3BF2 (halo du trajet).
+   Police : Poppins, chargée dans index.html.
    Pense aussi à "theme_color" et "background_color" dans manifest.webmanifest.
 
 4) APRÈS TOUTE MODIFICATION
-   - Dans sw.js, change "vroomy-v8" en "vroomy-v9" (puis v10...) : ça force les téléphones à recharger la nouvelle version.
+   - Dans sw.js, change "vroomy-v9" en "vroomy-v10" (puis v11...) : ça force les téléphones à recharger la nouvelle version.
    - Remets le dossier en ligne (Netlify Drop : glisse à nouveau le dossier).
    - Sur téléphone, si tu vois l'ancienne version : ferme complètement l'app/l'onglet et rouvre-la. Si tu avais ajouté l'app à l'écran d'accueil, supprime-la et ajoute-la à nouveau pour voir la nouvelle icône.
