@@ -572,8 +572,8 @@ function trafficOn(){ttErr=0;ttWarn=false;try{if(map.getLayer('tt-flow'))map.rem
 let incFC={type:'FeatureCollection',features:[]};
 function incLinesApply(){try{if(!map.getSource('ttl')){map.addSource('ttl',{type:'geojson',data:incFC});
   const add=(id,paint)=>map.addLayer({id,type:'line',source:'ttl',layout:{'line-cap':'round','line-join':'round'},paint},map.getLayer('rc')?'rc':undefined);
-  add('ttl-c',{'line-color':'#fff','line-width':['interpolate',['linear'],['zoom'],8,3,14,8,18,14],'line-opacity':.9});
-  add('ttl-l',{'line-color':['match',['get','c'],'r','#E5282D','#FFC400'],'line-width':['interpolate',['linear'],['zoom'],8,1.8,14,5,18,9]})}
+  add('ttl-c',{'line-color':'#fff','line-width':['interpolate',['linear'],['zoom'],8,3,14,8,18,14],'line-opacity':.95});
+  add('ttl-l',{'line-color':['match',['get','c'],'r','#E5282D','#FFC400'],'line-width':['interpolate',['linear'],['zoom'],8,1.8,14,5,18,9,'line-opacity':.95]})}
  else map.getSource('ttl').setData(incFC)}catch(e){}}
 async function ttInc(b){const K=TT();const f='{incidents{geometry{type,coordinates},properties{iconCategory,magnitudeOfDelay,events{description},from,to,roadNumbers,delay}}}';
  const r=await fetch('https://api.tomtom.com/traffic/services/5/incidentDetails?key='+encodeURIComponent(K)+'&bbox='+b.join(',')+'&fields='+encodeURIComponent(f)+'&language=fr-FR&timeValidityFilter=present');
