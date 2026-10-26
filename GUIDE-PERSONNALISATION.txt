@@ -10,30 +10,26 @@ Ouvre le dossier "vroomy" dans l'éditeur. Pour tout remplacer d'un coup : Ctrl+
    - js/app.js : textes "À propos", mentions légales, nom du fichier d'export
    Astuce : fais d'abord "Vroomy" -> "TonNom", puis "VROOMY" -> "TONNOM".
 
-2) CHANGER LE LOGO
-   Le logo est le fichier assets/icon.svg. Garde exactement ce nom de fichier.
-   a) Crée ton logo en carré (512 x 512 px), par exemple sur canva.com, puis télécharge-le en SVG ou PNG.
-   b) Remplace assets/icon.svg par ton logo. (Si tu n'as qu'un PNG, ouvre index.html et change "assets/icon.svg" en "assets/icon.png" aux endroits indiqués.)
-   c) Crée 3 images PNG carrées avec ton logo, avec ces noms exacts, dans assets/ :
-        icon-192.png  (192 x 192)
-        icon-512.png  (512 x 512)
-        apple-touch-icon.png  (180 x 180)
-      Le plus simple : realfavicongenerator.net ou cloudconvert.com pour redimensionner.
-   d) Laisse environ 10 % de marge autour du dessin pour que l'icône ne soit pas coupée sur Android.
+2) LE LOGO (déjà ton logo : pin corail + route + "Vroomy")
+   Fichiers dans le dossier assets/ :
+     logo-lockup.svg     : pin + route + mot "Vroomy" (bandeau de la carte et écran de bienvenue)
+     icon.svg            : icône carrée de l'application (fond sombre, pin corail, route blanche)
+     icon-maskable.svg   : même icône, avec marge, pour Android
+     icon-192.png, icon-512.png, apple-touch-icon.png (180 px), icon-maskable-512.png : les versions image de l'icône
+     logo-source.jpg     : ton image d'origine
+   Pour changer le logo plus tard : remplace ces fichiers en gardant EXACTEMENT les mêmes noms.
+   Astuce : pour obtenir les PNG à partir d'un SVG, utilise cloudconvert.com ou realfavicongenerator.net.
 
-3) CHANGER LES COULEURS ET LA POLICE
+3) COULEURS ET POLICE (palette du logo : encre, corail, crème)
    Ouvre css/style.css. Tout en haut, modifie les variables :
-     --g1 et --g2  : les deux couleurs du dégradé indigo -> violet (boutons, avatar, bandeau de guidage)
-     --grad / --grad2 : le dégradé lui-même (reprend --g1 et --g2, à mettre à jour avec les mêmes codes)
-     --bg / --card : fond de l'écran et des cartes blanches
-     --ink         : couleur du texte
-     --blue        : le violet des icônes dans les réglages
-     --glow        : l'intensité du halo lumineux autour des boutons
-   Couleur du trajet sur la carte : dans js/app.js, cherche 4B2BEA (trajet) et 7A3BF2 (halo du trajet).
+     --acc / --g1 / --g2 / --grad : le corail des boutons, interrupteurs et halos
+     --ink : l'encre (texte et boutons sombres)      --bg : le fond crème      --card : les cartes blanches
+     --blue : la couleur des icônes et liens (corail foncé)   --glow : l'intensité du halo
+   Couleur du trajet sur la carte : dans js/app.js, cherche 1E1F2B (trait) et F97758 (halo).
    Police : Poppins, chargée dans index.html.
    Pense aussi à "theme_color" et "background_color" dans manifest.webmanifest.
 
 4) APRÈS TOUTE MODIFICATION
-   - Dans sw.js, change "vroomy-v9" en "vroomy-v10" (puis v11...) : ça force les téléphones à recharger la nouvelle version.
+   - Dans sw.js, change "vroomy-v10" en "vroomy-v11" (puis v12...) : ça force les téléphones à recharger la nouvelle version.
    - Remets le dossier en ligne (Netlify Drop : glisse à nouveau le dossier).
    - Sur téléphone, si tu vois l'ancienne version : ferme complètement l'app/l'onglet et rouvre-la. Si tu avais ajouté l'app à l'écran d'accueil, supprime-la et ajoute-la à nouveau pour voir la nouvelle icône.
