@@ -2,7 +2,7 @@
 const $=s=>document.querySelector(s);
 const VAL='https://valhalla1.openstreetmap.de';
 /* Colle ici ta clé gratuite Stadia Maps (https://client.stadiamaps.com) : routage Valhalla fiable, sans le serveur public. */
-const STADIA_KEY='9852c83d-8a83-4773-b7cf-f5d4c78fd959';
+const STADIA_KEY='';
 const FU={ev:'Électrique',essence:'Essence',diesel:'Diesel',hybrid:'Hybride',gpl:'GPL'};
 const CN={all:'Toutes les prises',dom:'Prise domestique',t2:'Type 2',t1:'Type 1',ccs:'Combo CCS',cha:'CHAdeMO'};
 const ICONS=['🚗','🚙','🚕','🚐','🛻','🏎️','🛵','🏍️'];
@@ -12,8 +12,9 @@ const G={get(k,d){try{const v=localStorage.getItem('g:'+k);return v?JSON.parse(v
 const CUR=G.get('cur','guest'),PF=CUR==='guest'?'':CUR+':';
 const store={get(k,d){try{const v=localStorage.getItem(PF+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(PF+k,JSON.stringify(v))}catch(e){}if(typeof syncSoon==='function')syncSoon()}};
 const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const DEF={voice:true,vol:1,alert:true,tol:3,notoll:true,noferry:true,notrack:true,alts:true,theme:'auto',showrep:true,repbtn:true,flow:true,avoid:true,incmap:true,focusrem:true,duck:true,vmax:0,cons:0,vcol:'#4B2BEA',beg:false,vsp:false,fuel:'essence',conn:'all',vicon:'',vname:'',cursor:'auto',style:'positron',tilt:true,head:true,traffic:true,tomtom:'',stadia:''};
+const DEF={voice:true,vol:1,alert:true,tol:3,notoll:true,noferry:true,notrack:true,alts:true,theme:'auto',showrep:true,repbtn:true,flow:true,avoid:true,incmap:true,focusrem:true,duck:true,vmax:0,cons:0,vcol:'#F97758',beg:false,vsp:false,fuel:'essence',conn:'all',vicon:'',vname:'',cursor:'auto',style:'positron',tilt:true,head:true,traffic:true,tomtom:'',stadia:''};
 const S=Object.assign({},DEF,store.get('set',{}));
+if(['#4B2BEA','#FFCF1F','#0a84ff','#0A8F68','#2B6FF3'].includes(S.vcol))S.vcol='#F97758';
 function applyTheme(){if(S.theme==='auto')document.documentElement.removeAttribute('data-theme');else document.documentElement.dataset.theme=S.theme}
 applyTheme();
 const CI={fuel:'⛽',charging_station:'🔌',parking:'🅿️',supermarket:'🛒',convenience:'🛒',mall:'🛍️',restaurant:'🍽️',fast_food:'🍔',cafe:'☕',bar:'🍺',school:'🏫',university:'🎓',college:'🏫',hospital:'🏥',clinic:'🏥',pharmacy:'💊',doctors:'🩺',dentist:'🦷',station:'🚉',bus_station:'🚌',hotel:'🏨',bakery:'🥖',cinema:'🎬',library:'📚',bank:'🏦',post_office:'📮',townhall:'🏛️',stadium:'🏟️',sports_centre:'🏟️',park:'🌳',place_of_worship:'⛪'};
@@ -31,7 +32,7 @@ const SV={
  moto:'<rect x="9" y="3" width="6" height="58" rx="3" fill="#1b2340"/><rect x="5" y="22" width="14" height="22" rx="7" fill="@@" stroke="#fff" stroke-width="2.5"/><rect x="0" y="11" width="24" height="3.5" rx="1.7" fill="#1b2340"/><circle cx="12" cy="36" r="4" fill="#fff" opacity=".8"/>'};
 function vsvg(k,col,h){const w=(k==='sco'||k==='moto')?24:40;return '<svg viewBox="0 0 '+w+' 64" width="'+Math.round(h*w/64)+'" height="'+h+'" style="filter:drop-shadow(0 0 7px '+col+') drop-shadow(0 3px 4px #0005)">'+(SV[k]||SV.sedan).split('@@').join(col)+'</svg>'}
 const vIc=()=>S.vicon||VEH[vi].e,vNm=()=>(S.vname||'').trim()||VEH[vi].n;
-function curEl(){const d=document.createElement('div'),c=S.cursor,col=S.vcol||'#4B2BEA';
+function curEl(){const d=document.createElement('div'),c=S.cursor,col=S.vcol||'#F97758';
  if(c==='dot'){d.className='me';return d}
  if(c==='arrow'){d.innerHTML='<svg width="46" height="46" viewBox="0 0 44 44"><path d="M22 3 37 39 22 31 7 39Z" fill="'+col+'" stroke="#fff" stroke-width="3" stroke-linejoin="round"/></svg>';return d}
  d.innerHTML=vsvg(VK[vIc()]||'sedan',col,58);return d}
@@ -50,9 +51,9 @@ function vspOn(){try{VSPL.forEach(x=>{if(map.getLayer(x[0]))map.removeLayer(x[0]
  VSPL.forEach(([id,col,cl])=>map.addLayer({id,type:'line',source:'openmaptiles','source-layer':'transportation',minzoom:8,filter:['in',['get','class'],['literal',cl]],layout:{'line-cap':'round','line-join':'round'},paint:{'line-color':col,'line-width':['interpolate',['linear'],['zoom'],8,.8,13,2.5,17,6],'line-opacity':.85}},map.getLayer('rc')?'rc':undefined))}catch(e){}}
 const avInit=()=>{const n=(curProf().name||'').replace(/[^A-Za-zÀ-ÿ0-9]/g,'');return CUR==='guest'||!n?'V':n.slice(0,2).toUpperCase()};const applyUi=()=>{$('#rep').style.display=S.repbtn?'':'none';$('#avl').textContent=avInit()};const legend=()=>{$('#lg').style.display=S.vsp?'block':'none'};
 function addRoute(){try{vspOn()}catch(e){}try{trafficOn()}catch(e){}try{incLinesApply()}catch(e){}if(map.getSource('r'))return;map.addSource('r',{type:'geojson',data:{type:'FeatureCollection',features:[]}});
- map.addLayer({id:'rg',type:'line',source:'r',layout:{'line-cap':'round','line-join':'round'},paint:{'line-color':'#7A3BF2','line-width':24,'line-blur':10,'line-opacity':.5}});
+ map.addLayer({id:'rg',type:'line',source:'r',layout:{'line-cap':'round','line-join':'round'},paint:{'line-color':'#F97758','line-width':26,'line-blur':10,'line-opacity':.5}});
  map.addLayer({id:'rc',type:'line',source:'r',layout:{'line-cap':'round','line-join':'round'},paint:{'line-color':'#fff','line-width':11}});
- map.addLayer({id:'rl',type:'line',source:'r',layout:{'line-cap':'round','line-join':'round'},paint:{'line-color':'#4B2BEA','line-width':6}});if(R&&R.c&&R.c.length&&typeof dest!=='undefined'&&dest)drawRoute(R.c)}
+ map.addLayer({id:'rl',type:'line',source:'r',layout:{'line-cap':'round','line-join':'round'},paint:{'line-color':'#1E1F2B','line-width':6}});if(R&&R.c&&R.c.length&&typeof dest!=='undefined'&&dest)drawRoute(R.c)}
 map.on('style.load',addRoute);
 let errT=0,ttOff=false,errW=0,errN=0;
 map.on('error',e=>{const er=(e&&e.error)||{},id=e&&e.sourceId,st=er.status,msg=String(er.message||'').slice(0,70);
@@ -103,11 +104,11 @@ function home(){setSheet('full');
 function drawV(){
  const ev=S.fuel==='ev'||S.fuel==='hybrid';
  $('#vlist').innerHTML='<div class="sec">Type de véhicule</div>'+VEH.map((v,i)=>`<button class="opt ${i===vi?'sel':''}" data-vt="${i}"><span class="em">${v.e}</span><div><b>${v.n}</b><br><span style="color:var(--mute);font-size:14px">${v.d}</span></div></button>`).join('')+
- `<div class="sec">Icône sur la carte</div><div style="display:flex;flex-wrap:wrap;gap:10px;padding:12px 20px;background:var(--card)">${ICONS.map(x=>`<button class="chip" style="flex-direction:column;gap:4px;padding:8px 10px;${vIc()===x?'border-color:var(--blue);border-width:2.5px':''}" data-ic="${x}">${vsvg(VK[x],S.vcol||'#4B2BEA',46)}<small>${VN[VK[x]]}</small></button>`).join('')}</div>
+ `<div class="sec">Icône sur la carte</div><div style="display:flex;flex-wrap:wrap;gap:10px;padding:12px 20px;background:var(--card)">${ICONS.map(x=>`<button class="chip" style="flex-direction:column;gap:4px;padding:8px 10px;${vIc()===x?'border-color:var(--blue);border-width:2.5px':''}" data-ic="${x}">${vsvg(VK[x],S.vcol||'#F97758',46)}<small>${VN[VK[x]]}</small></button>`).join('')}</div>
  <div class="set"><span>Nom / modèle</span><input type="text" id="vn" value="${esc(S.vname)}" placeholder="ex. Aixam City"></div>
  <div class="set"><span>Vitesse max (facultatif)</span><input type="text" inputmode="numeric" id="vm" value="${S.vmax||''}" placeholder="${VEH[vi].base} km/h"></div>
  <div class="set"><span>Conso (${S.fuel==='ev'?'kWh':'L'}/100 km)</span><input type="text" inputmode="decimal" id="vc" value="${S.cons||''}" placeholder="ex. 4"></div>
- <div class="sec">Couleur sur la carte</div><div style="display:flex;gap:12px;padding:12px 20px;background:var(--card)">${['#4B2BEA','#e5484d','#1a9d5c','#ff7a59','#2B6FF3','#17140F'].map(x=>`<button data-col="${x}" style="width:38px;height:38px;border-radius:50%;border:3px solid ${S.vcol===x?'var(--ink)':'transparent'};background:${x}"></button>`).join('')}</div>
+ <div class="sec">Couleur sur la carte</div><div style="display:flex;gap:12px;padding:12px 20px;background:var(--card)">${['#F97758','#1E1F2B','#e5484d','#1a9d5c','#2B6FF3','#F5B700'].map(x=>`<button data-col="${x}" style="width:38px;height:38px;border-radius:50%;border:3px solid ${S.vcol===x?'var(--ink)':'transparent'};background:${x}"></button>`).join('')}</div>
  <div class="sec">Motorisation</div>`+Object.keys(FU).map(k=>`<button class="opt ${S.fuel===k?'sel':''}" data-fu="${k}"><span class="em">${{ev:'🔌',essence:'⛽',diesel:'🛢️',hybrid:'♻️',gpl:'🟢'}[k]}</span><b>${FU[k]}</b></button>`).join('')+
  (ev?'<div class="sec">Prise de recharge de mon véhicule</div>'+Object.keys(CN).map(k=>`<button class="opt ${S.conn===k?'sel':''}" data-cn="${k}"><b>${CN[k]}</b></button>`).join(''):'')+
  '<div style="padding:20px"><button class="big" data-ok="1">Terminer</button></div>'}
@@ -572,8 +573,8 @@ function trafficOn(){ttErr=0;ttWarn=false;try{if(map.getLayer('tt-flow'))map.rem
 let incFC={type:'FeatureCollection',features:[]};
 function incLinesApply(){try{if(!map.getSource('ttl')){map.addSource('ttl',{type:'geojson',data:incFC});
   const add=(id,paint)=>map.addLayer({id,type:'line',source:'ttl',layout:{'line-cap':'round','line-join':'round'},paint},map.getLayer('rc')?'rc':undefined);
-  add('ttl-c',{'line-color':'#fff','line-width':['interpolate',['linear'],['zoom'],8,3,14,8,18,14],'line-opacity':.95});
-  add('ttl-l',{'line-color':['match',['get','c'],'r','#E5282D','#FFC400'],'line-width':['interpolate',['linear'],['zoom'],8,1.8,14,5,18,9],'line-opacity':.95})}
+  add('ttl-c',{'line-color':'#fff','line-width':['interpolate',['linear'],['zoom'],8,3,14,8,18,14],'line-opacity':.9});
+  add('ttl-l',{'line-color':['match',['get','c'],'r','#E5282D','#FFC400'],'line-width':['interpolate',['linear'],['zoom'],8,1.8,14,5,18,9]})}
  else map.getSource('ttl').setData(incFC)}catch(e){}}
 async function ttInc(b){const K=TT();const f='{incidents{geometry{type,coordinates},properties{iconCategory,magnitudeOfDelay,events{description},from,to,roadNumbers,delay}}}';
  const r=await fetch('https://api.tomtom.com/traffic/services/5/incidentDetails?key='+encodeURIComponent(K)+'&bbox='+b.join(',')+'&fields='+encodeURIComponent(f)+'&language=fr-FR&timeValidityFilter=present');
